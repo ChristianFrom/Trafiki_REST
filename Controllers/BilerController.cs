@@ -26,27 +26,39 @@ namespace Trafiki_REST.Controllers
 
         // GET: api/Biler/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public Bil Get(int id)
         {
-            return "value";
+            return data.Find(c=> c.Nummer == id);
         }
 
         // POST: api/Biler
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Bil value)
         {
+            data.Add(value);
         }
 
         // PUT: api/Biler/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Bil value)
         {
+            Bil bil = Get(id);
+            if (bil != null)
+            {
+                bil.Nummer = value.Nummer;
+                bil.Tidspunkt = value.Tidspunkt;
+            }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            Bil bil = Get(id);
+            if (bil != null)
+            {
+                data.Remove(bil);
+            }
         }
     }
 }

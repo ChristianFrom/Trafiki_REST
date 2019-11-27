@@ -9,14 +9,13 @@ namespace Trafiki_REST.DBUtil
 {
     public class ManageBiler
     {
-        private const string ConnectionString = "Server=tcp:cfdatabase.database.windows.net,1433;" +
-                                                "Initial Catalog=sqldatabase;Persist Security Info=False;" +
-                                                "User ID=christianfrom;Password=Rasmussen1" +
-                                                ";MultipleActiveResultSets=False;Encrypt=True;" +
+        private const string ConnectionString = "Server=tcp:cfdatabase.database.windows.net,1433;Initial Catalog=trafikiDatabase;" +
+                                                "Persist Security Info=False;User ID=christianfrom;Password=Rasmussen1;" +
+                                                "MultipleActiveResultSets=False;Encrypt=True;" +
                                                 "TrustServerCertificate=False;Connection Timeout=30;";
 
 
-        public List<Bil> getAllItems()
+        public List<Bil> getAllBiler()
         {
             List<Bil> BilList = new List<Bil>();
             string queryString = "SELECT * FROM Biler";
@@ -74,13 +73,14 @@ namespace Trafiki_REST.DBUtil
 
         public bool CreateBil(Bil bil)
         {
-            string queryString = "INSERT INTO Biler (Nummer) VALUES (@Nummer)";
+            string queryString = "INSERT INTO Biler (Nummer,Tidspunkt) VALUES (@Nummer,@Tidspunkt)";
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 try
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);     
                     command.Parameters.AddWithValue("@Nummer", bil.Nummer);                    
+                    command.Parameters.AddWithValue("@Tidspunkt", bil.Tidspunkt);                    
                     command.Connection.Open();
                     command.ExecuteNonQuery();
                     command.Connection.Close();

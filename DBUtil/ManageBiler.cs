@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using Trafiki_ModelLib;
+using Trafiki_ModelLib; 
 
 namespace Trafiki_REST.DBUtil
 {
@@ -69,29 +69,32 @@ namespace Trafiki_REST.DBUtil
             return bil;
         }
 
+        public int antal;
 
 
+        
         public bool CreateBil(Bil bil)
         {
-            string queryString = "INSERT INTO Biler (Nummer,Tidspunkt) VALUES (@Nummer,@Tidspunkt)";
+            string queryString = "INSERT INTO Biler (Tidspunkt) VALUES (@Tidspunkt)";
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 try
                 {
-                    SqlCommand command = new SqlCommand(queryString, connection);     
-                    command.Parameters.AddWithValue("@Nummer", bil.Nummer);                    
-                    command.Parameters.AddWithValue("@Tidspunkt", bil.Tidspunkt);                    
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    command.Parameters.AddWithValue("@Tidspunkt", bil.Tidspunkt = DateTime.Now);                    
                     command.Connection.Open();
                     command.ExecuteNonQuery();
                     command.Connection.Close();
                 }
-                catch (SqlException e)
+                catch (SqlException)
                 {
                    throw new ArgumentException("500");
                 }
             }
             return true;
         }
+
+        
 
         public bool deleteBil(int id)
         {

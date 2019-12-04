@@ -30,11 +30,18 @@ namespace Trafiki_REST.Controllers
             return mngBiler.GetBilFromId(id);
         }
 
+        [HttpGet]
+        [Route("search")] //Bestemmer routen
+        public IEnumerable<Bil> Search([FromQuery] QueryCar qcar)
+        {
+            return mngBiler.SearchBiler(qcar);
+        }
+
         // POST: api/Biler
         [HttpPost]
-        public void Post([FromBody] Bil value)
+        public void Post(Bil value)
         {
-            mngBiler.CreateBil(value);
+            mngBiler.CreateBil(new Bil(DateTime.Now, 0));
         }
 
         

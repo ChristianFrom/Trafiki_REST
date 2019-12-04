@@ -43,6 +43,26 @@ namespace Trafiki_REST.DBUtil
             return BilList;
         }
 
+
+        public IEnumerable<Bil> SearchBiler(QueryCar qcar)
+        {
+            List<Bil> bilListe = getAllBiler().ToList();
+            List<Bil> result = new List<Bil>();
+
+            foreach (Bil bil in bilListe)
+            {
+                bool timeRange = bil.Tidspunkt < qcar.MaxTime && bil.Tidspunkt > qcar.MinTime;
+
+                if (timeRange)
+                {
+                    result.Add(bil);
+                }
+            }
+            return result;
+        }
+
+
+
         public Bil GetBilFromId(int id)
         {
             Bil bil = new Bil();
@@ -69,13 +89,10 @@ namespace Trafiki_REST.DBUtil
             return bil;
         }
 
-        public int antal;
-
-
         
         public bool CreateBil(Bil bil)
         {
-            string queryString = "INSERT INTO Biler (Tidspunkt) VALUES (@Tidspunkt)";
+            string queryString = "INSERT INTO Biler (Tidspunkt) VALUES (convert(datetime, @Tidspunkt, 103))";
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 try

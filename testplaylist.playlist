@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="Trafiki_Test.BilController_Test.TestGetAll" /><Add Test="Trafiki_Test.BilController_Test.TestPost_Count" /><Add Test="Trafiki_Test.BilController_Test.TestSearch" /><Add Test="Trafiki_Test.BilController_Test.isControllerNull" /><Add Test="Trafiki_Test.BilController_Test.TestDeleteAll" /></Playlist>

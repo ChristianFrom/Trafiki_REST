@@ -23,9 +23,16 @@ namespace Trafiki_REST.Controllers
             return mngBiler.getAllBiler() ;
         }
 
+        [HttpGet]
+        [Route("count")]
+        public int Count()
+        {
+            return mngBiler.CountBiler() ;
+        }
+
         // GET: api/Biler/5
         [HttpGet("{id}", Name = "Get")]
-        public Bil Get(int id)
+        public Bil GetFromID(int id)
         {
             return mngBiler.GetBilFromId(id);
         }

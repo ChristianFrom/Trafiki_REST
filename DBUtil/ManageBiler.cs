@@ -61,7 +61,14 @@ namespace Trafiki_REST.DBUtil
             return result;
         }
 
+        public int CountBiler()
+        {
+            List<Bil> bilListe = getAllBiler().ToList();
 
+            int antal = bilListe.Count;
+
+            return antal;
+        }
 
         public Bil GetBilFromId(int id)
         {

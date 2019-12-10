@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Trafiki_ModelLib; 
 
 namespace Trafiki_REST.DBUtil
@@ -18,7 +21,7 @@ namespace Trafiki_REST.DBUtil
         public List<Bil> getAllBiler()
         {
             List<Bil> BilList = new List<Bil>();
-            string queryString = "SELECT * FROM Biler";
+            string queryString = "SELECT * FROM BilerTest";
 
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
@@ -31,7 +34,8 @@ namespace Trafiki_REST.DBUtil
                     {
                         Bil bil = new Bil();
                         bil.Nummer = reader.GetInt32(0);
-                        bil.Tidspunkt = reader.GetDateTime(1);
+                        bil.Dato = reader.GetString(1);
+                        bil.Tid = reader.GetString(2);
                         BilList.Add(bil);
                     }
                 }
@@ -46,20 +50,44 @@ namespace Trafiki_REST.DBUtil
 
         public IEnumerable<Bil> SearchBiler(QueryCar qcar)
         {
-            List<Bil> bilListe = getAllBiler().ToList();
+            List<Bil> bilListe = getAllBiler();
             List<Bil> result = new List<Bil>();
+
+            string dateString, dateFormat;
+            string timeString, timeFormat;
+            CultureInfo provider = CultureInfo.InvariantCulture;
 
             foreach (Bil bil in bilListe)
             {
-                bool timeRange = bil.Tidspunkt < qcar.MaxTime && bil.Tidspunkt > qcar.MinTime;
+                dateString = bil.Dato;
+                dateFormat = "d";
 
-                if (timeRange)
+                timeString = bil.Tid;
+                timeFormat = "HH:mm";
+                
+                DateTime date = DateTime.ParseExact(dateString, "dd-MM-yyyy", provider);
+                DateTime time = DateTime.ParseExact(timeString, timeFormat, provider);
+
+                bool datoRange = date <= qcar.MaxDate && date >= qcar.MinDate;
+                bool timeRange = time <= qcar.MaxTime && time >= qcar.MinTime;
+
+
+                if (datoRange&timeRange)
                 {
                     result.Add(bil);
                 }
             }
             return result;
         }
+
+
+        //public IEnumerable<Bil> SearchBilerSpecifik(QueryCar qcar)
+        //{
+        //    List<Bil> bilListe = getAllBiler().ToList();
+        //    List<Bil> result = new List<Bil>();
+
+
+        //}
 
         public int CountBiler()
         {
@@ -70,42 +98,46 @@ namespace Trafiki_REST.DBUtil
             return antal;
         }
 
-        public Bil GetBilFromId(int id)
-        {
-            Bil bil = new Bil();
-            string queryString = "SELECT * FROM Biler WHERE Nummer=" + id;
+        //public Bil GetBilFromId(int id)
+        //{
+        //    Bil bil = new Bil();
+        //    string queryString = "SELECT * FROM BilerTest WHERE Nummer=" + id;
 
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
-            {
-                SqlCommand command = new SqlCommand(queryString, connection);
-                command.Connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                try
-                {
-                    while (reader.Read())
-                    {
-                        bil.Nummer = reader.GetInt32(0);
-                        bil.Tidspunkt = reader.GetDateTime(1);
-                    }
-                }
-                finally
-                {
-                    reader.Close();
-                }
-            }
-            return bil;
-        }
+        //    using (SqlConnection connection = new SqlConnection(ConnectionString))
+        //    {
+        //        SqlCommand command = new SqlCommand(queryString, connection);
+        //        command.Connection.Open();
+        //        SqlDataReader reader = command.ExecuteReader();
+        //        try
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                bil.Nummer = reader.GetInt32(0);
+        //                bil.Dato = reader.GetDateTime(1);
+        //                bil.Tid = reader.GetDateTime(2);
+        //            }
+        //        }
+        //        finally
+        //        {
+        //            reader.Close();
+        //        }
+        //    }
+        //    return bil;
+        //}
 
         
         public bool CreateBil(Bil bil)
         {
-            string queryString = "INSERT INTO Biler (Tidspunkt) VALUES (convert(datetime, @Tidspunkt, 103))";
+            string queryString = "INSERT INTO BilerTest (Dato, Tid) VALUES (@Dato, @Tid)";
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 try
                 {
+                    
                     SqlCommand command = new SqlCommand(queryString, connection);
-                    command.Parameters.AddWithValue("@Tidspunkt", bil.Tidspunkt = DateTime.Now);                    
+                    command.Parameters.AddWithValue("@Dato", bil.Dato = DateTime.Now.Date.ToShortDateString());
+                    command.Parameters.AddWithValue("@Tid", bil.Tid = DateTime.Now.ToShortTimeString());                    
+
                     command.Connection.Open();
                     command.ExecuteNonQuery();
                     command.Connection.Close();
@@ -148,7 +180,7 @@ namespace Trafiki_REST.DBUtil
 
         public bool deleteAllBiler()
         {
-            string queryString = "TRUNCATE TABLE Biler";
+            string queryString = "TRUNCATE TABLE BilerTest";
 
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {

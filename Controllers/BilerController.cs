@@ -30,12 +30,12 @@ namespace Trafiki_REST.Controllers
             return mngBiler.CountBiler() ;
         }
 
-        // GET: api/Biler/5
-        [HttpGet("{id}", Name = "Get")]
-        public Bil GetFromID(int id)
-        {
-            return mngBiler.GetBilFromId(id);
-        }
+        //// GET: api/Biler/5
+        //[HttpGet("{id}", Name = "Get")]
+        //public Bil GetFromID(int id)
+        //{
+        //    return mngBiler.GetBilFromId(id);
+        //}
 
         [HttpGet]
         [Route("search")] //Bestemmer routen
@@ -48,7 +48,7 @@ namespace Trafiki_REST.Controllers
         [HttpPost]
         public void Post(Bil value)
         {
-            mngBiler.CreateBil(new Bil(DateTime.Now, 0));
+            mngBiler.CreateBil(new Bil());
         }
 
         

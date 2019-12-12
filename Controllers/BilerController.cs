@@ -41,7 +41,14 @@ namespace Trafiki_REST.Controllers
         [Route("search")] //Bestemmer routen
         public IEnumerable<Bil> Search([FromQuery] QueryCar qcar)
         {
-            return mngBiler.SearchBiler(qcar);
+            return mngBiler.SearchBilerBegge(qcar);
+        }
+
+        [HttpGet]
+        [Route("searchtid")] //Bestemmer routen
+        public IEnumerable<Bil> SearchTid([FromQuery] QueryCar qcar)
+        {
+            return mngBiler.SearchBilerTid(qcar);
         }
 
         // POST: api/Biler

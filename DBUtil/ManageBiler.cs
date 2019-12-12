@@ -55,16 +55,11 @@ namespace Trafiki_REST.DBUtil
 
             string dateString, dateFormat;
             string timeString, timeFormat;
-            string maxDateString;
-            string minDateString;
-            string maxTimeString;
-            string minTimeString;
+            string maxDateString = qcar.MaxDateString;
+            string minDateString = qcar.MinDateString;
+            string maxTimeString = qcar.MaxTimeString;
+            string minTimeString = qcar.MinTimeString;
             CultureInfo provider = new CultureInfo("da-DK");
-
-            maxDateString = qcar.MaxDateString;
-            minDateString = qcar.MinDateString;
-            maxTimeString = qcar.MaxTimeString;
-            minTimeString = qcar.MinTimeString;
 
             timeFormat = "HH:mm";
             dateFormat = "dd-MM-yyyy";
@@ -97,12 +92,9 @@ namespace Trafiki_REST.DBUtil
             List<Bil> bilListe = getAllBiler();
             List<Bil> result = new List<Bil>();
             string timeString, timeFormat;
-            string maxTimeString;
-            string minTimeString;
-
+            string maxTimeString = qcar.MaxTimeString;
+            string minTimeString = qcar.MinTimeString;
             CultureInfo provider = new CultureInfo("da-DK");
-            maxTimeString = qcar.MaxTimeString;
-            minTimeString = qcar.MinTimeString;
             timeFormat = "HH:mm";
             DateTime maxTime = DateTime.ParseExact(maxTimeString, timeFormat, provider);
             DateTime minTime = DateTime.ParseExact(minTimeString, timeFormat, provider);
@@ -127,17 +119,13 @@ namespace Trafiki_REST.DBUtil
             List<Bil> bilListe = getAllBiler();
             List<Bil> result = new List<Bil>();
             string dateString, dateFormat;
-            string maxDateString;
-            string minDateString;
+            string maxDateString = qcar.MaxDateString;
+            string minDateString = qcar.MinDateString;
             CultureInfo provider = new CultureInfo("da-DK");
-
-            maxDateString = qcar.MaxDateString;
-            minDateString = qcar.MinDateString;
             dateFormat = "dd-MM-yyyy";
 
             DateTime maxDate = DateTime.ParseExact(maxDateString, dateFormat, provider);
             DateTime minDate = DateTime.ParseExact(minDateString, dateFormat, provider);
-
 
             foreach (Bil bil in bilListe)
             {
@@ -156,9 +144,7 @@ namespace Trafiki_REST.DBUtil
         public int CountBiler()
         {
             List<Bil> bilListe = getAllBiler().ToList();
-
             int antal = bilListe.Count;
-
             return antal;
         }
 

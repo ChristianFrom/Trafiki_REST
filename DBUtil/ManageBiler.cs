@@ -59,7 +59,6 @@ namespace Trafiki_REST.DBUtil
             string minDateString;
             string maxTimeString;
             string minTimeString;
-
             CultureInfo provider = new CultureInfo("da-DK");
 
             maxDateString = qcar.MaxDateString;
@@ -69,8 +68,6 @@ namespace Trafiki_REST.DBUtil
 
             timeFormat = "HH:mm";
             dateFormat = "dd-MM-yyyy";
-
-
             DateTime maxDate = DateTime.ParseExact(maxDateString, dateFormat, provider);
             DateTime minDate = DateTime.ParseExact(minDateString, dateFormat, provider);
             DateTime maxTime = DateTime.ParseExact(maxTimeString, timeFormat, provider);
@@ -84,10 +81,8 @@ namespace Trafiki_REST.DBUtil
 
                 DateTime date = DateTime.ParseExact(dateString, dateFormat, provider);
                 DateTime time = DateTime.ParseExact(timeString, timeFormat, provider);
-
                 bool datoRange = date <= maxDate && date >= minDate;
                 bool timeRange = time <= maxTime && time >= minTime;
-
 
                 if (datoRange&&timeRange)
                 {
@@ -101,36 +96,56 @@ namespace Trafiki_REST.DBUtil
         {
             List<Bil> bilListe = getAllBiler();
             List<Bil> result = new List<Bil>();
-
-
             string timeString, timeFormat;
             string maxTimeString;
             string minTimeString;
 
             CultureInfo provider = new CultureInfo("da-DK");
-
-
             maxTimeString = qcar.MaxTimeString;
             minTimeString = qcar.MinTimeString;
-
             timeFormat = "HH:mm";
-
-
             DateTime maxTime = DateTime.ParseExact(maxTimeString, timeFormat, provider);
             DateTime minTime = DateTime.ParseExact(minTimeString, timeFormat, provider);
 
 
             foreach (Bil bil in bilListe)
             {
-
                 timeString = bil.Tid;
-
                 DateTime time = DateTime.ParseExact(timeString, timeFormat, provider);
-
                 bool timeRange = time <= maxTime && time >= minTime;
-
-
                 if (timeRange)
+                {
+                    result.Add(bil);
+                }
+            }
+            return result;
+        }
+
+
+        public IEnumerable<Bil> SearchBilerDato(QueryCar qcar)
+        {
+            List<Bil> bilListe = getAllBiler();
+            List<Bil> result = new List<Bil>();
+            string dateString, dateFormat;
+            string maxDateString;
+            string minDateString;
+            CultureInfo provider = new CultureInfo("da-DK");
+
+            maxDateString = qcar.MaxDateString;
+            minDateString = qcar.MinDateString;
+            dateFormat = "dd-MM-yyyy";
+
+            DateTime maxDate = DateTime.ParseExact(maxDateString, dateFormat, provider);
+            DateTime minDate = DateTime.ParseExact(minDateString, dateFormat, provider);
+
+
+            foreach (Bil bil in bilListe)
+            {
+                dateString = bil.Dato;
+                DateTime date = DateTime.ParseExact(dateString, dateFormat, provider);
+                bool datoRange = date <= maxDate && date >= minDate;
+
+                if (datoRange)
                 {
                     result.Add(bil);
                 }
